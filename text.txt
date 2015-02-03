@@ -1,3 +1,6 @@
 maomao jiayou 
 zhsi jiayou 
+Git tracks changes
+Git tracks of files
+Git edit
 
