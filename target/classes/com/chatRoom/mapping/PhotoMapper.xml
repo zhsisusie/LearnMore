@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chatRoom.dao.PhotoDAO" >
+  <resultMap id="BaseResultMap" type="com.chatRoom.model.Photo" >
+    <id column="PHOTO_ID" property="photoId" jdbcType="DECIMAL" />
+    <result column="PHOTO_NAME" property="photoName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.chatRoom.model.Photo" extends="BaseResultMap" >
+    <result column="PHOTO_DATA" property="photoData" jdbcType="BLOB" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PHOTO_ID, PHOTO_NAME
+  </sql>
+  <sql id="Blob_Column_List" >
+    PHOTO_DATA
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PHOTO_TBL
+    where PHOTO_ID = #{photoId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from PHOTO_TBL
+    where PHOTO_ID = #{photoId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.chatRoom.model.Photo" >
+    insert into PHOTO_TBL (PHOTO_ID, PHOTO_NAME, PHOTO_DATA
+      )
+    values (#{photoId,jdbcType=DECIMAL}, #{photoName,jdbcType=VARCHAR}, #{photoData,jdbcType=BLOB}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chatRoom.model.Photo" >
+    insert into PHOTO_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="photoId != null" >
+        PHOTO_ID,
+      </if>
+      <if test="photoName != null" >
+        PHOTO_NAME,
+      </if>
+      <if test="photoData != null" >
+        PHOTO_DATA,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="photoId != null" >
+        #{photoId,jdbcType=DECIMAL},
+      </if>
+      <if test="photoName != null" >
+        #{photoName,jdbcType=VARCHAR},
+      </if>
+      <if test="photoData != null" >
+        #{photoData,jdbcType=BLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chatRoom.model.Photo" >
+    update PHOTO_TBL
+    <set >
+      <if test="photoName != null" >
+        PHOTO_NAME = #{photoName,jdbcType=VARCHAR},
+      </if>
+      <if test="photoData != null" >
+        PHOTO_DATA = #{photoData,jdbcType=BLOB},
+      </if>
+    </set>
+    where PHOTO_ID = #{photoId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chatRoom.model.Photo" >
+    update PHOTO_TBL
+    set PHOTO_NAME = #{photoName,jdbcType=VARCHAR},
+      PHOTO_DATA = #{photoData,jdbcType=BLOB}
+    where PHOTO_ID = #{photoId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chatRoom.model.Photo" >
+    update PHOTO_TBL
+    set PHOTO_NAME = #{photoName,jdbcType=VARCHAR}
+    where PHOTO_ID = #{photoId,jdbcType=DECIMAL}
+  </update>
+</mapper>
