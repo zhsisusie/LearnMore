@@ -1,0 +1,54 @@
+.dialog,
+.dialog_overlay{
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+}
+
+.dialog{
+	position:fixed;/* //fixed,生成绝对定位的元素，相对于浏览器窗口进行定位 */
+	display:-webkit-flex;/* //此元素即为伸缩盒模型中的伸缩容器，chrome*/
+	display:flex;/* 定义弹性伸缩模型 */
+	-webkit-align-items:center; /* 实现文本垂直居中 */
+	align-items:center;
+	-webkit-justify-content:center;/* 水平居中 */
+	justify-content:center;
+	pointer-events:none;/*//http://www.poluoluo.com/jzxy/201109/142876.html*/
+}
+.dialog_overlay{
+	position:absolute;
+	z-index:1;/* 当你定义的CSS中有position属性值为absolute、relative或fixed，用z-index此取值方可生效。此属性参数值越大，则被层叠在最上面。 */
+	background"rgba(55,58,71,0.9);
+	opacity:0;/* 规定不透明度。从 0.0 （完全透明）到 1.0（完全不透明） */
+	/* transition: width 2s; 把鼠标指针放到 div 元素上，其宽度会从 100px 逐渐变为 300px：*/
+	-webkit-transition:opacity 0.3s;
+	transition:opacity 0.3s;
+	-webkit-backface-visibility:hidden;/* 隐藏被旋转的 div 元素的背面： */
+
+}
+.dialog--open.dialog_overlay{
+	opacity:1;
+	pointer-events:auto;
+}
+.dialog_content{
+	width:50%;
+	max-width:560px;
+	min-width:290px;
+	background:#fff;/* 白色 */
+	padding:4em;/* 内边距 */
+	text-align:center;/* 文本垂直居中 */
+	position:relative;
+	z-index:5;
+	opacity:0;
+}
+.dialog--open.dialog_content{
+	pointer-events:auto;
+}
+.dialog h2{
+	margin:0;
+	font-weight: 2em;
+	font-size:2em;
+	padding:0 0 2em;
+	margin:0;
+}

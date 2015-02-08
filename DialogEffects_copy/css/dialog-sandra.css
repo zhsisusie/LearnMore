@@ -1,0 +1,32 @@
+.dialog.dialog--open.dialog_content,
+.diaog.dialog--close.dialog_content{
+	-webkit-animation-duration:0.3s;
+	animation-duration:0.3s;/* animation-duration 属性定义动画完成一个周期所需要的时间，以秒或毫秒计。 */
+	-webkit-animation-fill-mode:forwords;/* forwords当动画完成后，保持最后一个属性值（在最后一个关键帧中定义）。 */
+	animation-fill-mode:forwords;/* nimation-fill-mode 属性规定动画在播放之前或之后，其动画效果是否可见。 */
+}
+.dialog.dialog--open.dialog_content{
+	-webkit-animation-name:anim-open;
+	animation-name:anim-open;/* animation-name 属性为 @keyframes 动画规定名称。 */
+}
+.dialog.dialog--close.dialog_content{
+	-webkit-animation-name:anim-close;
+	animation-name:anim-close;
+}
+@-webkit-keyframes anim-open{/* 以百分比来规定改变发生的时间，或者通过关键词 "from" 和 "to"，等价于 0% 和 100%。 */
+	0%{opacity:0; -webkit-transform:scale3d(1.1,1.1,1); }
+	/* scale3d(x,y,z) 一个3D 拉伸, x:水平拉伸,y:垂直拉伸,z:Z方向的拉伸*/
+	100%{opacity:1; -webkit-transform:scale3d(1,1,1); }
+}
+@keyframes anim-open{
+	0%{opacity:0; -webkit-transform:scale3d(1.1,1.1,1);transform:scale3d(1.1,1.1,1); }
+	100%{opacity:1; -webkit-transform:scale3d(1,1,1); transform:scale3d(1,1,1);}
+}
+@-webkit-keyframes anim-close{
+	0%{opacity:1;}
+	100%{opaccity:0; -webkit-transform:scale3d(0.9,0.9,1);transform:scale3d(0.9,0.9,1);}
+}
+@keyframes anim-close{
+	0%{opacity:1;}
+	100%{ opacity:0;-webkit-transform:scale3d(0.9,0.9,1); transform:scale3d(0.9,0.9,1); }
+}
