@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -29,12 +31,17 @@ import junit.framework.TestSuite;
  * Unit test for simple App.
  */
 public class AppTest {
+	
+	String url="";
+	int maxRetry=10;
 	@org.junit.Test
 	public void testSelenium(){
+		
 		/*System.setProperty("webdriver.firefox.bin", "C:/Program Files (x86)/Mozilla Firefox/firefox.exe");
 		WebDriver driver=new FirefoxDriver();*/
-		System.getProperties().setProperty("webdriver.chrome.driver", "D:/startupPackage/chromedriver_win32/chromedriver.exe");
+		System.getProperties().setProperty("webdriver.chrome.driver", "C:/Program Files/Google/Chrome/Application/chromedriver.exe");
 		WebDriver driver=new ChromeDriver();
+		WebDriver window=null;
 		/*driver.get("http://www.google.com");
 		//按名称找到输入元素
 		WebElement element=driver.findElement(By.name("q"));
@@ -170,30 +177,107 @@ public class AppTest {
 			}
 		}).click();
 		WebElement e1=driver.findElement(By.id("iframeResult"));
-		if(e1!=null){
-			System.out.println("find");
-		}
 		driver.switchTo().frame("iframeResult");//注意需要加上这一句后面的form表单便可以找到了，id为ct100
 		wait.until(new ExpectedCondition<WebElement>(){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 			public WebElement apply(WebDriver d) {
-				WebElement e2=d.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[3]/a"));//这里的iframeResult需要点击才能获取的到
+				WebElement e2=d.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[21]/td[2]/a"));//这里的iframeResult需要点击才能获取的到
 				return e2;
 			}
-		}).click();////*[@id="ctl00"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a
+		});//这里实现点击功能,如需进一步跳转 ,加上.click()
+		
+		
 		//*//*[@id="ctl00"]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/a
-		WebElement e3=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/a"));
-		if(e3!=null){
-			System.out.println(e3.getText());
-			System.out.println("yeah");		
-		}
-		/*String frameSrc=e1.getAttribute("src");
-		System.out.println("zhsi:"+frameSrc);*/
-		 driver.close();
-		 
-		 /*f(!e2.isDisplayed()){
-				System.out.println("element can't be found");
+		//1*[@id="ctl00"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a
+		//2*[@id="ctl00"]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/a
+		//20*[@id="ctl00"]/table/tbody/tr[2]/td/table/tbody/tr[21]/td[2]/a
+		/*WebElement e3=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a"));
+		WebElement e4=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[3]/td[2]/a"));
+		WebElement e20=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[21]/td[2]/a"));
+		if(e20!=null){
+			System.out.println(e20.getText());
+		}*/
+		
+//---------获取第一页所有文献标题-----------------------------------------------------------------
+		/*for(int i=2;i<=21;i++){
+			WebElement e0=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr["+i+"]/td[2]/a"));
+			System.out.println("number:"+i+":"+e0.getText());
+		}*/
+		
+//---------点击下一页的按钮---------------------------------------------
+		driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[3]/td/table/tbody/tr/td/div/a[9]")).click();
+		WebElement t21=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a"));
+		System.out.println("第2页第1条页："+t21.getText());//第2页第一条
+		String currentWindow=driver.getWindowHandle();//获得当前窗口句柄
+		System.out.println(currentWindow);
+		t21.click();
+		//*
+		
+		Set<String>handles=driver.getWindowHandles();//获取所有窗口句柄
+		Iterator<String>it=handles.iterator();
+		
+		while(it.hasNext()){
+			if(currentWindow==it.next()){
+				continue;
 			}
-			jsLib.callEmbeddedSelenium(d,"triggerMouseEventAt", e2,"click", "0,0");*/
+			window=driver.switchTo().window(it.next());//切换到新窗口
+		}
+		
+		url=window.getCurrentUrl();
+		while(url==""&&maxRetry>0){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			url=window.getCurrentUrl();
+			maxRetry--;
+		}
+		System.out.println(url);
+		window.close();
+		driver.switchTo().window(currentWindow);
+		driver.switchTo().frame("iframeResult");
+		
+		
+//----------------------*[@id="ctl00"]/table/tbody/tr[3]/td/table/tbody/tr/td/div/a[11]---
+		driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[3]/td/table/tbody/tr/td/div/a[11]")).click();
+		
+		WebElement t31=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a"));
+		System.out.println("第3页第1条："+t31.getText());//第三页第一条
+		
+		
+//要解决的问题，如何抓取跳转到的子页面中的元素
+		
+//---------------------------第4页----------------------------------------------------------------
+		driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[3]/td/table/tbody/tr/td/div/a[11]")).click();
+		WebElement t41=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a"));
+		System.out.println("第4页第1条："+t41.getText());
+		
+		
+		
+//-----------------------------------------------------------------
+		//查询总共有多少页  //*[@id="J_ORDER"]/tbody/tr[2]/td/table/tbody/tr/td[2]/div/span[1]
+		WebElement totalPage=driver.findElement(By.xpath("//table[@id=\"J_ORDER\"]/tbody/tr[2]/td/table/tbody/tr/td[2]/div/span[1]"));
+		String totalPageText=totalPage.getText();
+		int index=totalPageText.indexOf('/');
+		String totalPageNumText=totalPageText.substring(index+1);
+		int totalPageNum=Integer.parseInt(totalPageNumText);
+		System.out.println(totalPageNum);
+//-------------------------------------------------------------------------------------
+		//抓取所有的页面中的第一条信息
+		/*for(int i=1;i<totalPageNum-5;i++){
+			driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[3]/td/table/tbody/tr/td/div/a[11]")).click();
+			WebElement t=driver.findElement(By.xpath("//form[@id=\"ctl00\"]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/a"));
+			System.out.println("第:"+(i+4)+"页1条："+t.getText());
+		}*/
+		
+//----------------------------------------------------------------------------------------------------------
+
+		driver.get("http://www.cnki.net/KCMS/detail/detail.aspx?QueryID=3&CurRec=21&recid=&filename=AHZY801.034&dbname=CJFD9899&dbcode=CJFQ&pr=&urlid=&yx=&v=MDY0MjJYUmQ3dTRIOC9NcklzcUY1NE9mZ2c1emhBVTRqaDRPWDZUckgwM2ViT1JSYm1mWmVkbkV5dm1XZz09SkM=");
+		//*[@id="content"]/div[1]/div[3]/div[2]/p[1]
+		WebElement se=driver.findElement(By.xpath("//div[@id=\"content\"]/div[1]/div[3]/div[2]/p[1]"));
+		System.out.println(se.getText());
+		driver.close();
 	}
 	
 	
